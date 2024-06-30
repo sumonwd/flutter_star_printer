@@ -9,29 +9,27 @@ Pod::Spec.new do |s|
   s.description      = <<-DESC
 A Flutter plugin for Star Micronics printers..
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://example.com'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'Sumon Mia' => 'https://github.com/sumonwd/' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
+  s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
   s.platform = :ios, '11.0'
-
-   # Add dependencies for StarIO and StarIO_Extension
-   s.dependency 'StarIO', '2.9.0'
-   s.dependency 'StarIO_Extension', '1.15.0'
-
-  # Preserve and vendor the Star Micronics frameworks
-  s.preserve_paths = 'Frameworks/*.framework'
-  s.vendored_frameworks = 'Frameworks/StarIO.framework', 'Frameworks/StarIO_Extension.framework'
-
-  # Specify the framework search paths
-  s.xcconfig = { 
-    'FRAMEWORK_SEARCH_PATHS' => '${PODS_ROOT}/../.symlinks/plugins/flutter_star_prnt/ios/Frameworks',
-    'OTHER_LDFLAGS' => '$(inherited) -framework "ExternalAccessory" -framework "CoreBluetooth"'
-  }
-
-  # Flutter.framework does not contain a i386 slice.
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
   s.swift_version = '5.0'
+  
+  s.preserve_paths = 'Frameworks/*.framework'
+  s.vendored_frameworks = 'Frameworks/*.framework'
+  # Flutter.framework does not contain a i386 slice. Only x86_64 simulators are supported.
+  
+  s.pod_target_xcconfig = { 
+    'DEFINES_MODULE' => 'NO',
+    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64',
+  }
+  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+
+  s.xcconfig = { 
+    "OTHER_LDFLAGS" => '$(inherited) -framework "ExternalAccessory" -framework "CoreBluetooth" -framework "StarIO" -framework "StarIO_Extension"'
+  }
 end

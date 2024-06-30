@@ -37,11 +37,12 @@ import android.webkit.URLUtil
 /** FlutterStarPrinterPlugin */
 public class FlutterStarPrinterPlugin : FlutterPlugin, MethodCallHandler {
     private lateinit var channel : MethodChannel
-    private lateinit var context: Context
+    private lateinit var applicationContext: Context
+    private var starIoExtManager: StarIoExtManager? = null
    override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "flutter_star_printer")
         channel.setMethodCallHandler(this)
-        context = flutterPluginBinding.applicationContext
+        applicationContext = flutterPluginBinding.applicationContext
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
@@ -80,7 +81,7 @@ public class FlutterStarPrinterPlugin : FlutterPlugin, MethodCallHandler {
         try {
             val portSettings: String? = getPortSettingsOption(emulation)
 
-            port = StarIOPort.getPort(portName, portSettings, 10000, context)
+            port = StarIOPort.getPort(portName, portSettings, 10000, applicationContext)
 
             Thread.sleep(500)
 
@@ -129,10 +130,10 @@ public class FlutterStarPrinterPlugin : FlutterPlugin, MethodCallHandler {
 
         val builder: ICommandBuilder = StarIoExt.createCommandBuilder(getEmulation(emulation))
         builder.beginDocument()
-        appendCommands(builder, printCommands, context)
+        appendCommands(builder, printCommands, applicationContext)
         builder.endDocument()
 
-        sendCommand(portName, getPortSettingsOption(emulation), builder.getCommands(), context, result)
+        sendCommand(portName, getPortSettingsOption(emulation), builder.getCommands(), applicationContext, result)
     }
   // cant run this on main thread, check this later
   public fun connect(@NonNull call: MethodCall, @NonNull result: Result) {
@@ -392,7 +393,7 @@ public class FlutterStarPrinterPlugin : FlutterPlugin, MethodCallHandler {
             var bitmap: Bitmap? = null
             if (URLUtil.isValidUrl(it.get("appendBitmap").toString())) {
               val imageUri: Uri = Uri.parse(it.get("appendBitmap").toString())
-              bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), imageUri)
+              bitmap = MediaStore.Images.Media.getBitmap(applicationContext.getContentResolver(), imageUri)
             } else {
               bitmap = BitmapFactory.decodeFile(it.get("appendBitmap").toString())
             }
