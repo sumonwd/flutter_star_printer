@@ -1,39 +1,54 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Star Micronics Flutter
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+A Flutter plugin for Star Micronics printers.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Discover Star Micronics printers
+- Check printer status
+- Send print commands
+- Support for various Star Micronics printer models
 
-## Getting started
+## Getting Started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+To use this plugin, add `flutter_star_printer` as a dependency in your pubspec.yaml file.
+
+```yaml
+dependencies:
+  flutter_star_printer: ^0.0.1
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+Here's a simple example of how to use the Star Micronics Flutter plugin:
 
 ```dart
-const like = 'sample';
+import 'package:flutter_star_printer/flutter_star_printer.dart';
+
+// Discover printers
+List<PortInfo> ports = await FlutterStarPrinter.portDiscovery(StarPortType.All);
+
+// Check printer status
+PrinterResponseStatus status = await FlutterStarPrinter.getStatus(
+  portName: ports[0].portName!,
+  emulation: "StarPRNT",
+);
+
+// Print a receipt
+PrintCommands commands = PrintCommands();
+commands.appendEncoding(StarEncoding.UTF8);
+commands.append("Hello, Star Micronics!");
+commands.appendCutPaper(StarCutPaperAction.PartialCutWithFeed);
+
+PrinterResponseStatus printStatus = await FlutterStarPrinter.sendCommands(
+  portName: ports[0].portName!,
+  emulation: "StarPRNT",
+  printCommands: commands,
+);
 ```
 
-## Additional information
+For more detailed examples, please check the `example` folder in the package repository.
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
