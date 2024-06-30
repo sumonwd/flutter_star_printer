@@ -5,6 +5,8 @@ package com.phonetechbd.flutter_star_printer
 import android.content.Context
 import android.graphics.*
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.text.Layout
 import android.text.StaticLayout
@@ -16,13 +18,18 @@ import com.starmicronics.stario.StarIOPort
 import com.starmicronics.stario.StarPrinterStatus
 import com.starmicronics.starioextension.ICommandBuilder
 import com.starmicronics.starioextension.ICommandBuilder.*
+import com.starmicronics.starioextension.IConnectionCallback
 import com.starmicronics.starioextension.StarIoExt
 import com.starmicronics.starioextension.StarIoExt.Emulation
+import com.starmicronics.starioextension.StarIoExtManager
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import io.flutter.plugin.common.PluginRegistry.Registrar
+import java.io.IOException
 import java.nio.charset.Charset
 import java.nio.charset.UnsupportedCharsetException
 import android.webkit.URLUtil
