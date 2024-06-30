@@ -33,8 +33,8 @@ import java.nio.charset.Charset
 import java.nio.charset.UnsupportedCharsetException
 import android.webkit.URLUtil
 
-/** FlutterStarPrntPlugin */
-public class FlutterStarPrntPlugin : FlutterPlugin, MethodCallHandler {
+/** FlutterStarPrinterPlugin */
+public class FlutterStarPrinterPlugin : FlutterPlugin, MethodCallHandler {
   protected var starIoExtManager: StarIoExtManager? = null
   companion object {
     protected lateinit var applicationContext: Context
@@ -42,15 +42,15 @@ public class FlutterStarPrntPlugin : FlutterPlugin, MethodCallHandler {
     @JvmStatic
     fun registerWith(registrar: Registrar) {
       val channel = MethodChannel(registrar.messenger(), "flutter_star_printer")
-      channel.setMethodCallHandler(FlutterStarPrntPlugin())
-      FlutterStarPrntPlugin.setupPlugin(registrar.messenger(), registrar.context())
+      channel.setMethodCallHandler(FlutterStarPrinterPlugin())
+      FlutterStarPrinterPlugin.setupPlugin(registrar.messenger(), registrar.context())
     }
     @JvmStatic
     fun setupPlugin(messenger: BinaryMessenger, context: Context) {
       try {
         applicationContext = context.getApplicationContext()
         val channel = MethodChannel(messenger, "flutter_star_printer")
-        channel.setMethodCallHandler(FlutterStarPrntPlugin())
+        channel.setMethodCallHandler(FlutterStarPrinterPlugin())
       } catch (e: Exception) {
           Log.e("FlutterStarPrnt", "Registration failed", e)
       }
@@ -58,7 +58,7 @@ public class FlutterStarPrntPlugin : FlutterPlugin, MethodCallHandler {
   }
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     val channel = MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "flutter_star_printer")
-    channel.setMethodCallHandler(FlutterStarPrntPlugin())
+    channel.setMethodCallHandler(FlutterStarPrinterPlugin())
     setupPlugin(flutterPluginBinding.getFlutterEngine().getDartExecutor(), flutterPluginBinding.getApplicationContext())
   }
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull rawResult: Result) {
